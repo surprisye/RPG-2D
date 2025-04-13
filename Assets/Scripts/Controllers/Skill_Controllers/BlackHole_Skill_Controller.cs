@@ -48,7 +48,7 @@ public class BlackHole_Skill_Controller : MonoBehaviour
         }
     }
 
-    public void Awake()
+    public void Start()
     {
         playerCanDisappear = true;
         canGrow = true;
@@ -107,7 +107,7 @@ public class BlackHole_Skill_Controller : MonoBehaviour
         if (playerCanDisappear)
         {
             playerCanDisappear = false;
-            PlayerManager.instance.player.MakeTransparent(true);
+            PlayerManager.instance.player.fx.MakeTransparent(true);
             
         }
     }

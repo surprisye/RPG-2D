@@ -14,10 +14,13 @@ public class Player : Entity
     public float moveSpeed;
     public float jumpForce;
     public float swordReturnImpact;
+    private float defaultMoveSpeed;
+    private float defaultJumpForce;
     
     [Header("Dash Info")]
     public float dashSpeed;
     public float dashDuration;
+    private float defaultDashSpeed;
     public float dashDirection{get;private set;}
 
 
@@ -34,11 +37,12 @@ public class Player : Entity
     public PlayerDashState dashState { get;private set; }
     public PlayerWallSlideState wallSlide { get;private set; }
     public PlayerWallJumpState wallJump { get;private set; }
-    public PlayerPrimaryAttackState PrimaryAttackState { get;private set; }
-    public PlayerCounterAttackState CounterAttackState { get;private set; }
+    public PlayerPrimaryAttackState primaryAttackState { get;private set; }
+    public PlayerCounterAttackState counterAttackState { get;private set; }
     public PlayerCatchSwordState catchSword { get;private set; }
     public PlayerAimSwordState aimSword { get;private set; }
     public PlayerBlackHoleState blackHole{get;private set;}
+    public PlayerDeadState deadState { get;private set; }
     #endregion
 
     protected override void Awake()
@@ -57,12 +61,14 @@ public class Player : Entity
         wallJump = new PlayerWallJumpState(this,stateMachine,"Jump");
         
         //攻击机制
-        PrimaryAttackState = new PlayerPrimaryAttackState(this, stateMachine, "Attack");
-        CounterAttackState = new PlayerCounterAttackState(this, stateMachine, "CounterAttack");
+        primaryAttackState = new PlayerPrimaryAttackState(this, stateMachine, "Attack");
+        counterAttackState = new PlayerCounterAttackState(this, stateMachine, "CounterAttack");
         //技能
         aimSword = new PlayerAimSwordState(this,stateMachine,"AimSword");
         catchSword = new PlayerCatchSwordState(this,stateMachine,"CatchSword");
         blackHole = new PlayerBlackHoleState(this, stateMachine, "Jump");
+        
+        deadState = new PlayerDeadState(this,stateMachine,"Die");
     }
 
     protected override void Start()
@@ -72,6 +78,10 @@ public class Player : Entity
         skill = SkillManager.instance;
         
         stateMachine.Initialize(idleState);
+        
+        defaultMoveSpeed = moveSpeed;
+        defaultJumpForce = jumpForce;
+        defaultDashSpeed = dashSpeed;
         
     }
     
@@ -87,6 +97,25 @@ public class Player : Entity
         {
             skill.crystal.CanUseSkill();
         }
+    }
+
+    public override void SlowEntity(float _slowPercentage, float _slowDuration)
+    {
+        moveSpeed = moveSpeed * (1 - _slowPercentage);
+        jumpForce = jumpForce * (1 - _slowPercentage);
+        dashSpeed = dashSpeed * (1 - _slowPercentage);
+        anim.speed = anim.speed * (1 - _slowPercentage);
+        
+        Invoke("ReturnDefaultSpeed" ,_slowDuration);
+    }
+
+    protected override void ReturnDefaultSpeed()
+    {
+        base.ReturnDefaultSpeed();
+        
+        moveSpeed = defaultMoveSpeed;
+        jumpForce = defaultJumpForce;
+        dashSpeed = defaultDashSpeed;
     }
 
     public void AssignNewSword(GameObject _newSword)
@@ -135,5 +164,12 @@ public class Player : Entity
             
             stateMachine.ChangeState(dashState);
         }
+    }
+
+    public override void Die()
+    {
+        base.Die();
+        
+        stateMachine.ChangeState(deadState);
     }
 }

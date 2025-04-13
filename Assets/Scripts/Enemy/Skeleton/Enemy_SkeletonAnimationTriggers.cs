@@ -17,7 +17,9 @@ public class Enemy_SkeletonAnimationTriggers : MonoBehaviour
         {
             if (hit.GetComponent<Player>() != null)
             {
-                hit.GetComponent<Player>().Damage();
+                PlayerStats _target = hit.GetComponent<PlayerStats>();
+                enemy.stats.DoDamage(_target);
+                //hit.GetComponent<Player>().DamageImpact();
             }
         }
     }

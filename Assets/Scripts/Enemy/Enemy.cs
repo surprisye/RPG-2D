@@ -24,6 +24,7 @@ public class Enemy : Entity
     
     
     public EnemyStateMachine stateMachine {get;private set;}
+    public String lastAnimBoolName {get;private set;}
 
     protected override void Awake()
     {
@@ -38,6 +39,26 @@ public class Enemy : Entity
         base.Update();
         
         stateMachine.currentState.Update();
+    }
+
+    public virtual void AssignLastAnimName(String _animBoolName)
+    {
+        lastAnimBoolName = _animBoolName;
+    }
+
+    public override void SlowEntity(float _slowPercentage, float _slowDuration)
+    {
+        moveSpeed = moveSpeed * (1 - _slowPercentage);
+        anim.speed = anim.speed * (1 - _slowPercentage);
+        
+        Invoke("ReturnDefaultSpeed", _slowDuration);
+    }
+
+    protected override void ReturnDefaultSpeed()
+    {
+        base.ReturnDefaultSpeed();
+        
+        moveSpeed = defaultMoveSpeed;
     }
 
     public virtual void AnimationFinishTrigger() => stateMachine.currentState.AnimationFinishTrigger();

@@ -4,6 +4,7 @@ using Random = UnityEngine.Random;
 
 public class Clone_Skill_Controller : MonoBehaviour
 {
+    private Player player;
     private SpriteRenderer sr;
     private Animator anim;
     [SerializeField] private float colorLosingSpeed;
@@ -17,7 +18,7 @@ public class Clone_Skill_Controller : MonoBehaviour
     private bool canDuplicateClone;
     private float chanceToDuplicate;
     
-    private void Awake()
+    private void Start()
     {
         facingDirection = 1;
         attackCheckRadius = .8f;
@@ -39,7 +40,7 @@ public class Clone_Skill_Controller : MonoBehaviour
 
     public void SetupClone(Transform _newTransform,float _cloneDuration,
         bool _canAttack,Vector3 _offset,Transform _closestEnemy,
-        bool _canDuplicate,float _chanceToDuplicate)
+        bool _canDuplicate,float _chanceToDuplicate,Player _player)
     {
         if (_canAttack)
         {
@@ -51,6 +52,7 @@ public class Clone_Skill_Controller : MonoBehaviour
         closestEnemy = _closestEnemy;
         canDuplicateClone = _canDuplicate;
         chanceToDuplicate = _chanceToDuplicate;
+        player = _player;
         FaceClosestTarget();
     }
     
@@ -67,7 +69,8 @@ public class Clone_Skill_Controller : MonoBehaviour
         {
             if (hit.GetComponent<Enemy>() != null)
             {
-                hit.GetComponent<Enemy>().Damage();
+                player.stats.DoDamage(hit.GetComponent<CharacterStats>());
+                
 
                 if (canDuplicateClone)
                 {

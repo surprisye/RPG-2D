@@ -5,6 +5,7 @@ using Random = UnityEngine.Random;
 
 public class Crystal_Skill_Controller : MonoBehaviour
 {
+    private Player player;
     private Animator anim => GetComponent<Animator>();
     private CircleCollider2D cd => GetComponent<CircleCollider2D>();
     
@@ -20,19 +21,20 @@ public class Crystal_Skill_Controller : MonoBehaviour
     
     private Transform closestTarget;
     [SerializeField] private LayerMask whatIsEnemy;
-    private void Awake()
+    private void Start()
     {
         growSpeed = 5;
     }
 
     public void SetupCrystal(float _crystalDuration,bool _canExplode,
-        bool _canMove,float _moveSpeed,Transform _closestTarget)
+        bool _canMove,float _moveSpeed,Transform _closestTarget,Player _player)
     {
         crystalExitTimer = _crystalDuration;
         canExplode = _canExplode;
         canMove = _canMove;
         moveSpeed = _moveSpeed;
         closestTarget = _closestTarget;
+        player = _player;
     }
 
     public void ChooseRandomEnemy()
@@ -59,6 +61,12 @@ public class Crystal_Skill_Controller : MonoBehaviour
 
         if (canMove)
         {
+            if (closestTarget == null)
+            {
+                Invoke("FinishCrystal",5f);
+                return;
+            }
+
             transform.position = Vector3.MoveTowards(transform.position,
                 closestTarget.position, moveSpeed * Time.deltaTime);
 
@@ -84,7 +92,7 @@ public class Crystal_Skill_Controller : MonoBehaviour
         {
             if (hit.GetComponent<Enemy>() != null)
             {
-                hit.GetComponent<Enemy>().Damage();
+                player.stats.DoMagicDamage(hit.GetComponent<CharacterStats>());
             }
         }
     }

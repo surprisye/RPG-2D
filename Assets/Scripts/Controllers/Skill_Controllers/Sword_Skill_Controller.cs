@@ -39,7 +39,7 @@ public class Sword_Skill_Controller : MonoBehaviour
     private float spinDirection;
     
     
-    private void Awake()
+    private void Start()
     {
         returnSpeed = 12;
         anim = GetComponentInChildren<Animator>();
@@ -225,7 +225,7 @@ public class Sword_Skill_Controller : MonoBehaviour
 
     private void SwordSkillDamage(Enemy enemy)
     {
-        enemy.Damage();
+        player.stats.DoDamage(enemy.GetComponent<CharacterStats>());
         enemy.StartCoroutine("FreezeTimerFor",freezeTimeDuration);
     }
 

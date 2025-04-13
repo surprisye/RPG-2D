@@ -32,7 +32,7 @@ public class Clone_Skill : Skill
 
         newClone.GetComponent<Clone_Skill_Controller>().SetupClone(_clonePosition,
             cloneDuration,canAttack,_offset,FindClosestEnemy(newClone.transform),
-            canDuplicateClone,chanceToDuplicate);
+            canDuplicateClone,chanceToDuplicate,player);
     }
 
     public void CreateCloneOnDashStart()
