@@ -7,7 +7,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: thunderStrikeHit
+  m_Name: shockStrikeHit
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -20,7 +20,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 2c86e275ada28b449aa0dbda2e6396f4, type: 2}
+  m_Motion: {fileID: 7400000, guid: 79e815d897b6dae4c8e9a842d954fab9, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -32,7 +32,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Thunder_Strike_AC
+  m_Name: ShockStrike_AC
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Hit
@@ -111,7 +111,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: thunderStrikeIdle
+  m_Name: shockStrikeIdle
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -125,7 +125,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: a3cf6ecda1739b147a99448989ca25ce, type: 2}
+  m_Motion: {fileID: 7400000, guid: a534ccbb64752884c8f80a9117afec22, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

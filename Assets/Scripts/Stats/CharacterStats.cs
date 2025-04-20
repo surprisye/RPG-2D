@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -51,7 +52,7 @@ public class CharacterStats : MonoBehaviour
     public int currentHealth;
     
     public System.Action onHealthChanged;
-    protected bool isDead;
+    public bool isDead { get;private set; }
     
 
     protected virtual void Start()
@@ -82,6 +83,20 @@ public class CharacterStats : MonoBehaviour
             ApplyIgniteDamage();
     }
 
+    public virtual void IncreaseStatBy(int _modifier, float _duration, Stat _statToModify)
+    {
+        StartCoroutine(StatModCoroutine(_modifier, _duration, _statToModify));
+    }
+
+    IEnumerator StatModCoroutine(int _modifier, float _duration, Stat _statToModify)
+    {
+        _statToModify.AddModifier(_modifier);
+        
+        yield return new WaitForSeconds(_duration);
+        
+        _statToModify.RemoveModifier(_modifier);
+    }
+    
     public virtual void DoDamage(CharacterStats _targetStats)
     {
         if (TargetCanAvoidAttack(_targetStats)) 
@@ -97,7 +112,7 @@ public class CharacterStats : MonoBehaviour
         
         totalDamage = CheckTargetArmor(_targetStats, totalDamage);
         _targetStats.TakeDamage(totalDamage);
-        //DoMagicDamage(_targetStats);
+        DoMagicDamage(_targetStats);//如果你不想在普通攻击上附加魔法伤害则删除
     }
 
     #region Magical Damage and Aliments
@@ -283,6 +298,17 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
+    public virtual void IncreaseHealthBy(int _amount)
+    {
+        currentHealth += _amount;
+        
+        if(currentHealth > GetMaxHealthValue())
+            currentHealth = GetMaxHealthValue();
+        
+        onHealthChanged?.Invoke();
+        Debug.Log("治疗了" + _amount);
+    }
+    
     protected virtual void DecreaseHealthBy(int _damage)
     {
         currentHealth -= _damage;
@@ -309,7 +335,17 @@ public class CharacterStats : MonoBehaviour
     }
     
     private  int CheckTargetResistance(CharacterStats _targetStats, int totalMagicDamage)
-    {
+    { // 检查目标对象是否有效
+        if (_targetStats == null || _targetStats.gameObject == null) {
+            Debug.LogError("目标角色状态无效！可能已被销毁或未初始化。");
+            return 0;
+        }
+
+        // 检查魔法抗性属性是否已初始化
+        if (_targetStats.magicResistance == null) {
+            Debug.LogError($"{_targetStats.gameObject.name} 的魔法抗性未配置！");
+            return 0;
+        }
         totalMagicDamage -= _targetStats.magicResistance.GetValue() + (_targetStats.intelligence.GetValue() * 3);
         totalMagicDamage = Mathf.Clamp(totalMagicDamage, 0, int.MaxValue);
         return totalMagicDamage;

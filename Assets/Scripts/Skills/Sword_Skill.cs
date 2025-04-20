@@ -31,7 +31,7 @@ public class Sword_Skill : Skill
     
     [Header("Skill Info")] 
     [SerializeField] private GameObject swordPrefab;
-    [FormerlySerializedAs("launchDir")] [SerializeField] private Vector2 launchForce;
+    [SerializeField] private Vector2 launchForce;
     [SerializeField] private float swordGravity;
     [SerializeField] private float freezeTimeDuration;
     [SerializeField] private float returnSpeed;
@@ -46,19 +46,16 @@ public class Sword_Skill : Skill
     [SerializeField] private Transform dotsParent;
     
     private GameObject[] dots;
-
-    private void Awake()
-    {
-        
-    }
-
+    
+    
     protected override void Start()
     {
         base.Start();
         
+        SetupGravity();
+        
         GenerateDots();
 
-        SetupGravity();
     }
 
     private void SetupGravity()

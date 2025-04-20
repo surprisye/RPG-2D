@@ -94,9 +94,13 @@ public class Player : Entity
         CheckDashInput();
 
         if (Input.GetKeyDown(KeyCode.F))
-        {
             skill.crystal.CanUseSkill();
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Debug.Log("用血瓶");
+            Inventory.instance.UseFlask();
         }
+
     }
 
     public override void SlowEntity(float _slowPercentage, float _slowDuration)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Unity.VisualScripting;
@@ -38,16 +39,19 @@ public class Sword_Skill_Controller : MonoBehaviour
     
     private float spinDirection;
     
-    
-    private void Start()
+
+    private void Awake()
     {
-        returnSpeed = 12;
+        returnSpeed = 15;
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
         cd = GetComponent<CircleCollider2D>();
+
+        canRotate = true;
+        enemyTarget = new List<Transform>();
     }
 
-    private void DestoryMe()
+    private void DestroyMe()
     {
         Destroy(gameObject);
     }
@@ -66,7 +70,7 @@ public class Sword_Skill_Controller : MonoBehaviour
         
         spinDirection = Mathf.Clamp(rb.linearVelocity.x,-1,1);
         
-        Invoke("DestoryMe",7);
+        Invoke("DestroyMe",7);
     }
 
     public void SetupBounce(bool _isBouncing, int _bounceAmount,float _bounceSpeed)
@@ -226,7 +230,14 @@ public class Sword_Skill_Controller : MonoBehaviour
     private void SwordSkillDamage(Enemy enemy)
     {
         player.stats.DoDamage(enemy.GetComponent<CharacterStats>());
-        enemy.StartCoroutine("FreezeTimerFor",freezeTimeDuration);
+        enemy.FreezeTimeFor(freezeTimeDuration);
+        
+        ItemData_Equipment equippedAmulet = Inventory.instance.GetEquipment(EquipmentType.Amulet);
+
+        if (equippedAmulet != null)
+        {
+            equippedAmulet.ExecuteItemEffect(enemy.transform);
+        }
     }
 
     private void SetupTargetForBounce(Collider2D collision)

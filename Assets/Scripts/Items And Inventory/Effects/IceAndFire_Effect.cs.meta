@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 7dc67b3e0eed9d242b7d3ae96de7172b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - iceAndFirePrefab: {fileID: 7287540653840166094, guid: 5e51ba24d4751ab43ac398732b463498, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
