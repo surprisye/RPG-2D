@@ -26,7 +26,6 @@ public class PlayerAnimationTriggers : MonoBehaviour
 
             //受击效果
             //hit.GetComponent<Enemy>().DamageImpact();
-            
             Inventory.instance.GetEquipment(EquipmentType.Weapon)?.ExecuteItemEffect(_target.transform);
 
          }

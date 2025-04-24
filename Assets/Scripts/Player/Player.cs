@@ -93,11 +93,10 @@ public class Player : Entity
         
         CheckDashInput();
 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F) && skill.crystal.crystalUnlocked)
             skill.crystal.CanUseSkill();
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            Debug.Log("用血瓶");
             Inventory.instance.UseFlask();
         }
 
@@ -153,8 +152,9 @@ public class Player : Entity
     {
         if (ISWallDetected() && !ISGroundDetected())
             return;
-        
-        
+
+        if (skill.dash.dashUnlocked == false)
+            return;
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && SkillManager.instance.dash.CanUseSkill())
         {

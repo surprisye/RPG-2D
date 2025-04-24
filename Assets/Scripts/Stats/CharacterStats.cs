@@ -53,7 +53,7 @@ public class CharacterStats : MonoBehaviour
     
     public System.Action onHealthChanged;
     public bool isDead { get;private set; }
-    
+    public bool isVulnerable { get;private set; }
 
     protected virtual void Start()
     {
@@ -83,18 +83,31 @@ public class CharacterStats : MonoBehaviour
             ApplyIgniteDamage();
     }
 
-    public virtual void IncreaseStatBy(int _modifier, float _duration, Stat _statToModify)
+    public void MakeVulnerableFor(float _duration)
     {
-        StartCoroutine(StatModCoroutine(_modifier, _duration, _statToModify));
+        StartCoroutine(VulnerableForCoroutine(_duration));
     }
-
-    IEnumerator StatModCoroutine(int _modifier, float _duration, Stat _statToModify)
+    
+    private IEnumerator VulnerableForCoroutine(float _duration)
     {
-        _statToModify.AddModifier(_modifier);
+        isVulnerable = true;
         
         yield return new WaitForSeconds(_duration);
         
-        _statToModify.RemoveModifier(_modifier);
+        isVulnerable = false;
+    }
+    public virtual void IncreaseStatBy(int _modifier, float _duration, Stat _statOfType)
+    {
+        StartCoroutine(StatModCoroutine(_modifier, _duration, _statOfType));
+    }
+
+    IEnumerator StatModCoroutine(int _modifier, float _duration, Stat _statOfType)
+    {
+        _statOfType.AddModifier(_modifier);
+        
+        yield return new WaitForSeconds(_duration);
+        
+        _statOfType.RemoveModifier(_modifier);
     }
     
     public virtual void DoDamage(CharacterStats _targetStats)
@@ -311,6 +324,10 @@ public class CharacterStats : MonoBehaviour
     
     protected virtual void DecreaseHealthBy(int _damage)
     {
+        if (isVulnerable)
+        {
+            _damage = Mathf.RoundToInt(_damage * 1.1f);
+        }
         currentHealth -= _damage;
         
         onHealthChanged?.Invoke();
@@ -324,7 +341,7 @@ public class CharacterStats : MonoBehaviour
 
     #region Start Calculations
     
-    private  int CheckTargetArmor(CharacterStats _targetStats, int totalDamage)
+    protected  int CheckTargetArmor(CharacterStats _targetStats, int totalDamage)
     {
         if (_targetStats.isChilled)
             totalDamage -= Mathf.RoundToInt(_targetStats.armor.GetValue() * .8f);
@@ -350,8 +367,13 @@ public class CharacterStats : MonoBehaviour
         totalMagicDamage = Mathf.Clamp(totalMagicDamage, 0, int.MaxValue);
         return totalMagicDamage;
     }
+
+    public virtual void OnEvasion()
+    {
+        
+    }
     
-    private  bool TargetCanAvoidAttack(CharacterStats _targetStats)
+    protected  bool TargetCanAvoidAttack(CharacterStats _targetStats)
     {
         int totalEvasion = _targetStats.evasion.GetValue() + _targetStats.agility.GetValue() + _targetStats.vitality.GetValue();
 
@@ -362,13 +384,14 @@ public class CharacterStats : MonoBehaviour
         
         if (Random.Range(0,100) < totalEvasion)
         {
+            _targetStats.OnEvasion();
             return true;
         }
 
         return false;
     }
 
-    private bool CanCrit()
+    protected bool CanCrit()
     {
         int totalCriticalChance = critChance.GetValue() + agility.GetValue();
 
@@ -379,7 +402,7 @@ public class CharacterStats : MonoBehaviour
         return false;
     }
 
-    private int CalculateCriticalDamage(int _damage)
+    protected int CalculateCriticalDamage(int _damage)
     {
         float totalCritDamage = (critPower.GetValue() + strength.GetValue()) * 0.1f;
         
@@ -394,4 +417,41 @@ public class CharacterStats : MonoBehaviour
     }
 
     #endregion
+    
+    public Stat StatOfType(StatType _statType)
+    {
+        switch (_statType)
+        {
+            case StatType.strength:
+                return strength;
+            case StatType.agility:
+                return agility;
+            case StatType.intelligence:
+                return intelligence;
+            case StatType.vitality:
+                return vitality;
+            case StatType.damage:
+                return damage;
+            case StatType.critChance:
+                return critChance;
+            case StatType.critPower:
+                return critPower;
+            case StatType.health :
+                return maxHealth;
+            case StatType.armor:
+                return armor;
+            case StatType.evasion:
+                return evasion;
+            case StatType.magicResist:
+                return magicResistance;
+            case StatType.fireDamage:
+                return fireDamage;
+            case StatType.iceDamage:
+                return iceDamage;
+            case StatType.lightningDamage:
+                return lightingDamage;
+            default:
+                throw new System.ArgumentException("Unhandled stat type", "_statType");
+        }
+    }
 }

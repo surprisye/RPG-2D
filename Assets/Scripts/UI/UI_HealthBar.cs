@@ -8,6 +8,8 @@ public class UI_HealthBar : MonoBehaviour
     private CharacterStats myStats;
     private RectTransform myTransform;
     private Slider slider;
+    
+    
     private void Start()
     {
         myTransform = GetComponent<RectTransform>();
@@ -37,4 +39,6 @@ public class UI_HealthBar : MonoBehaviour
         entity.onFlipped -= FlipUI;
         myStats.onHealthChanged -= UpdateHealthUI;
     }
+
+    
 }

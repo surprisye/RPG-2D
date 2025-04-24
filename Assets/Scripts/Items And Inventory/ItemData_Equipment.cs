@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public enum EquipmentType
 {
@@ -14,8 +15,11 @@ public class ItemData_Equipment : ItemData
 {
     public EquipmentType equipmentType;
     
+    [Header("Unique Effect")]
     public float itemCoolDown;
     public ItemEffect[] itemEffects;
+
+
 
     [Header("Major Stats")]
     public int strength;       //1点strength升级百分之一的伤害和暴击伤害
@@ -28,8 +32,8 @@ public class ItemData_Equipment : ItemData
     public int critChance;     //
     public int critPower;      //默认150%
     
-    [Header("Defensive Stats")]
-    public int maxHealth;
+    [FormerlySerializedAs("Health")] [FormerlySerializedAs("maxHealth")] [Header("Defensive Stats")]
+    public int health;
     public int armor;
     public int evasion;
     public int magicResistance;
@@ -42,6 +46,7 @@ public class ItemData_Equipment : ItemData
     [Header("Craft Requirement")]
     public List<InventoryItem> craftingMaterials;
 
+    private int descriptionLength;
     public void ExecuteItemEffect(Transform _enemyPosition)
     {
         foreach (var item in itemEffects)
@@ -63,7 +68,7 @@ public class ItemData_Equipment : ItemData
         playerStats.critChance.AddModifier(critChance);
         playerStats.critPower.AddModifier(critPower);
         
-        playerStats.maxHealth.AddModifier(maxHealth);
+        playerStats.maxHealth.AddModifier(health);
         playerStats.armor.AddModifier(armor);
         playerStats.evasion.AddModifier(evasion);
         playerStats.magicResistance.AddModifier(magicResistance);
@@ -85,7 +90,7 @@ public class ItemData_Equipment : ItemData
         playerStats.critChance.RemoveModifier(critChance);
         playerStats.critPower.RemoveModifier(critPower);
         
-        playerStats.maxHealth.RemoveModifier(maxHealth);
+        playerStats.maxHealth.RemoveModifier(health);
         playerStats.armor.RemoveModifier(armor);
         playerStats.evasion.RemoveModifier(evasion);
         playerStats.magicResistance.RemoveModifier(magicResistance);
@@ -94,5 +99,66 @@ public class ItemData_Equipment : ItemData
         playerStats.iceDamage.RemoveModifier(iceDamage);
         playerStats.lightingDamage.RemoveModifier(lightingDamage);
     }
+
+    public override string GetDescription()
+    {
+        sb.Length = 0;
+        descriptionLength = 0;
+        
+        
+        AddItemDescription(strength, "Strength");
+        AddItemDescription(agility, "Agility");
+        AddItemDescription(intelligence, "Intelligence");
+        AddItemDescription(vitality, "Vitality");
+        
+        AddItemDescription(damage, "Damage");
+        AddItemDescription(critChance, "CritChance");
+        AddItemDescription(critPower, "CritPower");
+        
+        AddItemDescription(health, "Health");
+        AddItemDescription(armor, "Armor");
+        AddItemDescription(magicResistance, "MagicResistance");
+        AddItemDescription(fireDamage, "FireDamage");
+        AddItemDescription(iceDamage, "IceDamage");
+        AddItemDescription(lightingDamage, "LightingDamage");
+
+        for (int i = 0; i < itemEffects.Length; i++)
+        {
+            if (itemEffects[i].effectDescription.Length > 0)
+            {
+                sb.AppendLine();
+                sb.Append("Unique: -" + itemEffects[i].effectDescription);
+                descriptionLength++;
+            }
+        }
+        
+        if (descriptionLength < 5)
+        {
+            for (int i = 0; i < 5 - descriptionLength; i++)
+            {
+                sb.AppendLine();
+                sb.Append(" ");
+            }
+        }
+
+        
+        
+        return sb.ToString();
+    }
     
+
+    private void AddItemDescription(int _value, string _name)
+    {
+        if (_value != 0)
+        {
+            if (sb.Length > 0)
+                sb.AppendLine();
+            
+
+            if (_value > 0)
+                sb.Append("+ " + _value + " " + _name);
+
+            descriptionLength++;
+        }
+    }
 }

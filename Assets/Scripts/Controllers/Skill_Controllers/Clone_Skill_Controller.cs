@@ -17,7 +17,8 @@ public class Clone_Skill_Controller : MonoBehaviour
     
     private bool canDuplicateClone;
     private float chanceToDuplicate;
-    
+
+    private float attackMultiplier;
     private void Start()
     {
         facingDirection = 1;
@@ -40,7 +41,7 @@ public class Clone_Skill_Controller : MonoBehaviour
 
     public void SetupClone(Transform _newTransform,float _cloneDuration,
         bool _canAttack,Vector3 _offset,Transform _closestEnemy,
-        bool _canDuplicate,float _chanceToDuplicate,Player _player)
+        bool _canDuplicate,float _chanceToDuplicate,Player _player,float _attackMultiplier)
     {
         if (_canAttack)
         {
@@ -53,6 +54,7 @@ public class Clone_Skill_Controller : MonoBehaviour
         canDuplicateClone = _canDuplicate;
         chanceToDuplicate = _chanceToDuplicate;
         player = _player;
+        attackMultiplier = _attackMultiplier;
         FaceClosestTarget();
     }
     
@@ -69,8 +71,16 @@ public class Clone_Skill_Controller : MonoBehaviour
         {
             if (hit.GetComponent<Enemy>() != null)
             {
-                player.stats.DoDamage(hit.GetComponent<CharacterStats>());
+                //player.stats.CloneDoDamage(hit.GetComponent<CharacterStats>(),attackMultiplier);
+                PlayerStats playerStats = player.GetComponent<PlayerStats>();
+                EnemyStats enemyStats = hit.GetComponent<EnemyStats>();
                 
+                playerStats.CloneDoDamage(enemyStats,attackMultiplier);
+
+                if (player.skill.clone.canApplyOnHitEffect)
+                {
+                    Inventory.instance.GetEquipment(EquipmentType.Weapon)?.ExecuteItemEffect(hit.transform);
+                }
 
                 if (canDuplicateClone)
                 {

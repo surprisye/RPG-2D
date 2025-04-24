@@ -16,11 +16,7 @@ public class ItemObject : MonoBehaviour
         GetComponent<SpriteRenderer>().sprite = itemData.icon;
         gameObject.name = "Item Object-" + itemData.itemName;
     }
-
-    private void Update()
-    {
-        
-    }
+    
 
     public void SetupItem(ItemData _itemData,Vector2 _velocity)
     {
@@ -32,6 +28,11 @@ public class ItemObject : MonoBehaviour
 
     public void PickupItem()
     {
+        if (!Inventory.instance.CanAddItem() && itemData.itemType == ItemType.Equipment)
+        {
+            rb.linearVelocity = new Vector2(0, 7);
+            return;
+        }
         Inventory.instance.AddItem(itemData);
         Destroy(gameObject);
     }
