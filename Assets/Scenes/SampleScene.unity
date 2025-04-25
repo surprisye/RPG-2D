@@ -9446,6 +9446,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 569679824}
   m_CullTransparentMesh: 1
+--- !u!1 &585781751
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 585781753}
+  - component: {fileID: 585781752}
+  m_Layer: 0
+  m_Name: SaveManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &585781752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585781751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc2dc671cbe7339408bcbebed9fa65ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fileName: data.json
+--- !u!4 &585781753
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585781751}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 415.65527, y: 732.5133, z: -6.7416954}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &593682120
 GameObject:
   m_ObjectHideFlags: 0
@@ -17913,6 +17958,7 @@ MonoBehaviour:
   stashSlotParent: {fileID: 404896245}
   equipmentSlotParent: {fileID: 941972217}
   statSlotParent: {fileID: 54494363}
+  loadedItems: []
 --- !u!4 &1283341220
 Transform:
   m_ObjectHideFlags: 0
@@ -31317,6 +31363,7 @@ SceneRoots:
   - {fileID: 460053843}
   - {fileID: 430327725}
   - {fileID: 429375389}
+  - {fileID: 585781753}
   - {fileID: 2308210156408057983}
   - {fileID: 605586927}
   - {fileID: 988056540}
