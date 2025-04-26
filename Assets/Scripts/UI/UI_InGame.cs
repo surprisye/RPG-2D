@@ -13,16 +13,16 @@ public class UI_InGame : MonoBehaviour
     [SerializeField] private Image swordImage;
     [SerializeField] private Image blackHoleImage;
     [SerializeField] private Image flaskImage;
-
-    [SerializeField] private TextMeshProUGUI currentSouls;
     
-    //[SerializeField] private Transform[] childrenTransform;
-    //private int lastHealth;
-
     private SkillManager skills;
+    
+    [Header("Souls Info")]
+    [SerializeField] private TextMeshProUGUI currentSouls;
+    [SerializeField] private float soulsAmount;
+    [SerializeField] private float increaseRate = 100;
+    
     void Start()
     {
-        //lastHealth = playerStats.GetMaxHealthValue();
         if (playerStats != null)
         {
             playerStats.onHealthChanged += UpdateHealthUI;
@@ -33,8 +33,8 @@ public class UI_InGame : MonoBehaviour
     
     void Update()
     {
-        currentSouls.text = PlayerManager.instance.GetCurrentCurrency().ToString("#,#");
-        
+        UpdateSoulsUI();
+
         if (Input.GetKeyDown(KeyCode.LeftShift) && skills.dash.dashUnlocked) 
             SetCooldownOf(dashImage);
 
@@ -60,6 +60,21 @@ public class UI_InGame : MonoBehaviour
         CheckCooldownOf(blackHoleImage,skills.blackHole.cooldown);
         CheckCooldownOf(flaskImage,Inventory.instance.flaskCoolDown);
     }
+
+    private void UpdateSoulsUI()
+    {
+        if (soulsAmount < PlayerManager.instance.GetCurrentCurrency())
+        {
+            soulsAmount += Time.deltaTime * increaseRate;
+        }
+        else
+        {
+            soulsAmount = PlayerManager.instance.GetCurrentCurrency();
+        }
+
+        currentSouls.text = ((int)soulsAmount).ToString("#,#");
+    }
+
     private void UpdateHealthUI()
     {
         //IncreasingHealthBarLength(lastHealth);
@@ -67,15 +82,6 @@ public class UI_InGame : MonoBehaviour
         slider.value = playerStats.currentHealth;
         
     }
-
-    /*private void IncreasingHealthBarLength(int lastHealth)
-    {
-        childrenTransform = gameObject.GetComponentsInChildren<Transform>();
-        RectTransform rect = childrenTransform[1].GetComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(rect.sizeDelta.x ,
-            rect.sizeDelta.y * (playerStats.GetMaxHealthValue() / lastHealth)+ slider.value);
-        
-    }*/
     
     private void SetCooldownOf(Image _image)
     {

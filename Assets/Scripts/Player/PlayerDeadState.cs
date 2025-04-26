@@ -9,6 +9,8 @@ public class PlayerDeadState : PlayerState
     public override void Enter()
     {
         base.Enter();
+        
+        GameObject.Find("Canvas").GetComponent<UI>().SwitchOnEndScreen();
     }
 
     public override void Update()
@@ -27,4 +29,5 @@ public class PlayerDeadState : PlayerState
     {
         base.AnimationFinishTrigger();
     }
+    
 }

@@ -16,7 +16,7 @@ public class SaveManager : MonoBehaviour
     private FileDataHandler fileDataHandler;
 
     [ContextMenu("Delete save file")]
-    private void DeleteSavedData()
+    public void DeleteSavedData()
     {
         fileDataHandler = new FileDataHandler(Application.persistentDataPath, fileName,encrypData);
         fileDataHandler.Delete();
@@ -77,5 +77,14 @@ public class SaveManager : MonoBehaviour
     {
         IEnumerable<ISaveManager> saveManagers = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.InstanceID).OfType<ISaveManager>();
         return new List<ISaveManager>(saveManagers);
+    }
+
+    public bool HasSaveData()
+    {
+        if (fileDataHandler.Load() != null)
+        {
+            return true;
+        }
+        return false;
     }
 }
