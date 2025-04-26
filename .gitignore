@@ -70,3 +70,13 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+Assets/Graphics/Font/simhei SDF.asset
+Assets/Graphics/Font/simhei SDF.asset.meta
+Assets/Graphics/Font/simhei.ttf
+Assets/Graphics/Font/simhei.ttf.meta
+Assets/Graphics/Font/SyneMono-Regular SDF-Chinese.asset
+Assets/Graphics/Font/SyneMono-Regular SDF-Chinese.asset.meta
+Assets/Graphics/Font/常用汉字库 3500.txt
+Assets/Graphics/Font/常用汉字库 3500.txt.meta
+Assets/TextMesh Pro/Examples & Extras/Fonts/Electronic Highway Sign SDF.asset
+Assets/TextMesh Pro/Examples & Extras/Fonts/Electronic Highway Sign SDF.asset.meta
